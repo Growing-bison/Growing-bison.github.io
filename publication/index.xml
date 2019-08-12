@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Publications on Welcome to Bison&#39;s website</title>
+    <link>https://growing-bison.github.io/publication/</link>
+    <description>Recent content in Publications on Welcome to Bison&#39;s website</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018</copyright>
+    <lastBuildDate>Sun, 01 Jan 2017 00:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="https://growing-bison.github.io/publication/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Greenhouse gas emissions from dairy open lot and manure stockpile in northern China: A case study</title>
+      <link>https://growing-bison.github.io/publication/pubulication1/</link>
+      <pubDate>Fri, 01 Jan 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://growing-bison.github.io/publication/pubulication1/</guid>
+      <description>Further details on the publication can be seen in pdf file. </description>
+    </item>
+    
+    <item>
+      <title>Effects of configuration and headspace mixing on the accuracy of closed chambers for dairy farm gas emission measurement</title>
+      <link>https://growing-bison.github.io/publication/pubulication2/</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://growing-bison.github.io/publication/pubulication2/</guid>
+      <description>Further details on the publication can be seen in pdf file. </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 2.4.0">
+  <meta name="generator" content="Hugo 0.48" />
+  <meta name="author" content="Qikun Lu(卢启昆)">
+
+  
+  
+  
+  
+    
+  
+  <meta name="description" content="这是关于气象数据从nc到csv处理结果，并展示的过程。
+
+">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://growing-bison.github.io/post/%E6%B0%94%E8%B1%A1%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#0095eb">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous">
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-125961128-1', 'auto');
+      
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js" integrity="sha512-HUmooslVKj4m6OBu0OgzjXXr+QuFYy/k7eLI5jdeEy/F4RSgMn6XRWRGkFi5IFaFgy7uFTkegp3Z0XnJf3Jq+g==" crossorigin="anonymous"></script>
+    
+  
+  
+
+  
+  <link rel="alternate" href="https://growing-bison.github.io/index.xml" type="application/rss+xml" title="Welcome to Bison&#39;s website">
+  <link rel="feed" href="https://growing-bison.github.io/index.xml" type="application/rss+xml" title="Welcome to Bison&#39;s website">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://growing-bison.github.io/post/%E6%B0%94%E8%B1%A1%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Welcome to Bison&#39;s website">
+  <meta property="og:url" content="https://growing-bison.github.io/post/%E6%B0%94%E8%B1%A1%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/">
+  <meta property="og:title" content="数据处理之气象数据 | Welcome to Bison&#39;s website">
+  <meta property="og:description" content="这是关于气象数据从nc到csv处理结果，并展示的过程。
+
+">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-01-09T16:16:59&#43;08:00">
+  
+  <meta property="article:modified_time" content="2018-01-09T16:16:59&#43;08:00">
+  
+
+  
+
+  
+
+  <title>数据处理之气象数据 | Welcome to Bison&#39;s website</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/"><img src="/img/logo_1.jpg" alt="Welcome to Bison&#39;s website"></a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications_selected">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#posts">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/files/cv.pdf">
+            
+            <span>CV</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">数据处理之气象数据</h1>
+
+    
+
+<div class="article-metadata">
+
+  
+  
+  <span itemscope itemprop="author" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Qikun Lu(卢启昆)">
+  </span>
+  
+
+  <span class="article-date">
+    
+    <meta content="2018-01-09 16:16:59 &#43;0800 CST" itemprop="datePublished">
+    <time datetime="2018-01-09 16:16:59 &#43;0800 CST" itemprop="dateModified">
+      Jan 9, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Qikun Lu(卢启昆)">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    3 min read
+  </span>
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <a href="https://growing-bison.github.io/post/%E6%B0%94%E8%B1%A1%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/#disqus_thread"></a>
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    
+    <a href="https://growing-bison.github.io/categories/data-science/">data science</a>
+    
+  </span>
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=%e6%95%b0%e6%8d%ae%e5%a4%84%e7%90%86%e4%b9%8b%e6%b0%94%e8%b1%a1%e6%95%b0%e6%8d%ae&amp;url=https%3a%2f%2fgrowing-bison.github.io%2fpost%2f%25E6%25B0%2594%25E8%25B1%25A1%25E6%2595%25B0%25E6%258D%25AE%25E5%25A4%2584%25E7%2590%2586%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fgrowing-bison.github.io%2fpost%2f%25E6%25B0%2594%25E8%25B1%25A1%25E6%2595%25B0%25E6%258D%25AE%25E5%25A4%2584%25E7%2590%2586%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fgrowing-bison.github.io%2fpost%2f%25E6%25B0%2594%25E8%25B1%25A1%25E6%2595%25B0%25E6%258D%25AE%25E5%25A4%2584%25E7%2590%2586%2f&amp;title=%e6%95%b0%e6%8d%ae%e5%a4%84%e7%90%86%e4%b9%8b%e6%b0%94%e8%b1%a1%e6%95%b0%e6%8d%ae"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fgrowing-bison.github.io%2fpost%2f%25E6%25B0%2594%25E8%25B1%25A1%25E6%2595%25B0%25E6%258D%25AE%25E5%25A4%2584%25E7%2590%2586%2f&amp;title=%e6%95%b0%e6%8d%ae%e5%a4%84%e7%90%86%e4%b9%8b%e6%b0%94%e8%b1%a1%e6%95%b0%e6%8d%ae"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=%e6%95%b0%e6%8d%ae%e5%a4%84%e7%90%86%e4%b9%8b%e6%b0%94%e8%b1%a1%e6%95%b0%e6%8d%ae&amp;body=https%3a%2f%2fgrowing-bison.github.io%2fpost%2f%25E6%25B0%2594%25E8%25B1%25A1%25E6%2595%25B0%25E6%258D%25AE%25E5%25A4%2584%25E7%2590%2586%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+    <div class="article-style" itemprop="articleBody">
+      <p>这是关于气象数据从nc到csv处理结果，并展示的过程。</p>
+
+<p></p>
+
+<h1 id="一-大体背景介绍">一、大体背景介绍</h1>
+
+<p>由于直接观测数据难以覆盖全面，希望能补充部分数据源，现需对开放的再分析数据进行简单分析。
+- 提取
+需求目标：从某种再分析数据源当中提取全国气象自动监测站点的数据，获取相应站点日数据。
+涉及到几个气象要素：日均气温、日降水、日相对湿度、日辐射、日风速、日最大气温、日最小气温等七个要素。</p>
+
+<ul>
+<li><p>已有资源及数据情况：<br />
+数据源：格式-nc文件，空间分辨率0.125°的网格，时间分辨率小于24小时，时间跨度10年，总文件大小60G左右</p></li>
+
+<li><p>处理分析
+将再分析数据与观测站的数据进行比较，采用均方根误差RMSE作为指标，以月均值为主要对象，区域范围包括中国。</p></li>
+</ul>
+
+<h1 id="二-数据提取-处理">二、数据提取、处理、</h1>
+
+<p>提取的前提是对数据源的了解，明确单位、精度、气象要素的正常值范围等。
+准备的文件：全国主要观测站点的经纬度坐标，格式csv/txt等。</p>
+
+<p>大体的流程图如下：</p>
+
+<p><img src="/img/figure_m2/flow1.png" alt="alt text" /></p>
+
+<h1 id="2-1-提取的代码块1">2.1 提取的代码块1</h1>
+
+<p>简单提取程序脚本如下图：</p>
+
+<p><img src="/img/figure_m2/py1.PNG" alt="alt text" /></p>
+
+<h1 id="2-2-异常值和缺失值的代码块1">2.2 异常值和缺失值的代码块1</h1>
+
+<p>异常与缺失处理：</p>
+
+<pre><code>{python}
+# find missing value &amp;&amp; put NaN
+missing = df.ix[(df[df.columns[7]] == 32766)]
+#print('########temperature missing########')
+for index, row in missing.iterrows():
+    #print(row[0], row[4], row[5], row[6], row[7])
+    print(index)
+df[df == 32766] = np.nan
+# get temperature
+tmp = df[df.columns[7]] * 0.1
+</code></pre>
+
+<h1 id="2-3-要素转换的代码块1">2.3 要素转换的代码块1</h1>
+
+<p>主要是对将辐射转成日照时长。</p>
+
+<pre><code>{python}
+def dursun(lat_deg, dt):
+    
+    t = 24.0/pi*(acos(-tan(lat_rad)*tan(theta)))
+    return t
+
+def Ra():
+
+    Ra = 24 * 60 * Gsc * dr * ( (ws * sin(lat_rad) * sin(delta)) + ( cos(lat_rad) * cos(delta) * sin(ws))) / pi
+    return Ra
+
+</code></pre>
+
+<h1 id="2-4-数据提取结果">2.4 数据提取结果</h1>
+
+<p>考虑存在csv格式文件，文件数量=7个气象要素×194个站点，大小200多Mb。</p>
+
+<p><center> <img src="/img/figure_m2/file1.PNG" alt="再分析数据提取结果" /></p>
+
+<h1 id="三-数据分析">三、数据分析</h1>
+
+<p>准备的数据：<br />
+1. 约200个站点的再分析日值数据（即从nc文件中提取出来，并清洗、转换好）；<br />
+2. 约200个站点的观测站日值数据。<br />
+3. 全国观测站点的经纬度坐标信息。</p>
+
+<p>上述数据均保存在csv文件当中，统一保存的编码格式。</p>
+
+<p>比较累年月值（12个月），月值（某年某月），累年值（某年）等的再分析数据对比观测站数据的误差情况。</p>
+
+<p>数据组织与流向如下图：</p>
+
+<table>
+<thead>
+<tr>
+<th>源</th>
+<th>要素（温度、湿度等）</th>
+<th>时间分辨率</th>
+<th>文件数量及大小</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>再分析</td>
+<td>&hellip;</td>
+<td>10年日值</td>
+<td>1300个左右，200-300M</td>
+</tr>
+
+<tr>
+<td>观测站</td>
+<td>&hellip;</td>
+<td>10年日值</td>
+<td>194个，100M左右</td>
+</tr>
+</tbody>
+</table>
+
+<h1 id="3-1-文件与数据管理">3.1 文件与数据管理</h1>
+
+<p>数据组织变化涉及几个步骤，以其中一个要素分析为例说明如下：</p>
+
+<p><img src="/img/figure_m2/file_struction.png" alt="alt text" /></p>
+
+<h1 id="3-2-数据分析处理与输出">3.2 数据分析处理与输出</h1>
+
+<pre><code>{python}
+
+CMA_datasource_dir = '/media/dira/'
+station_194_dir = '/media/latlon.csv'
+df = pd.read_csv(station_194_dir, header=0, sep=',')
+star_time = datetime(2004, 1, 1).strftime('%Y-%m-%d')
+end_time = datetime(2016, 7, 31).strftime('%Y-%m-%d')
+
+# 2、读入194个CMA观测数据
+val_3 = os.popen(&quot;find /media/dir2 -name '%s*'&quot; \
+                 % (stid)).read()
+#年份、月份提取
+obs_vlu_m = grouped_by_month.mean()
+</code></pre>
+
+<h1 id="3-4-数据分析处理与输出">3.4 数据分析处理与输出</h1>
+
+<p>对应累积年值的计算结果,包含194个站点1-12个月的对应RSEM、相关系数等。</p>
+
+<p><img src="/img/figure_m2/file3.PNG" alt="alt text" /></p>
+
+<h1 id="四-数据观测与图表绘制">四、数据观测与图表绘制</h1>
+
+<h3 id="1-观测多个站点在不同时间尺度上的误差分布-误差分布与海拔高度间关系">1. 观测多个站点在不同时间尺度上的误差分布，误差分布与海拔高度间关系。</h3>
+
+<h3 id="2-空间分布上不同站点的情况">2. 空间分布上不同站点的情况。</h3>
+
+<h3 id="准备的数据"><strong>准备的数据：</strong></h3>
+
+<ol>
+<li><p>某个要素的约200个站点的误差及相关系数数据</p></li>
+
+<li><p>工具平台：R、GIS、python</p></li>
+</ol>
+
+<h1 id="4-1-简单频次分布图">4.1 简单频次分布图</h1>
+
+<p>对数据中的RSME绘制简单的分布图</p>
+
+<p><img src="/img/figure_m2/Daily_h.png" alt="简单分布图" /></p>
+
+<h1 id="4-2-时间序列分布图">4.2 时间序列分布图</h1>
+
+<p>多个站点的月值图
+<img src="/img/figure_m2/month_help_value.png" alt="多个站点累积月值" /></p>
+
+<h1 id="4-3-空间分布图">4.3 空间分布图</h1>
+
+<p>在python上简单绘制的结果
+<img src="/img/figure_m2/map_py.png" alt="py绘制的map" /></p>
+
+<hr />
+
+<p>借助GIS绘制的结果
+<img src="/img/figure_m2/map_gis.png" alt="gis绘制的map" /></p>
+
+<h1 id="4-4-简单结论">4.4 简单结论</h1>
+
+<p>1.　温度日值、月值的准确性较高，整体上和观测值基本相符，在具体应用时需区分不同地区</p>
+
+<p>2.　准确性较低的区域原因：
+  +  受复杂地形等因素所影响
+  +  另一方面可能是观测数据本身站点少、观测质量</p>
+
+<h1 id="五-小案例线性回归">五、小案例线性回归</h1>
+
+<p>如何在已有数据基础之上，筛除异常值，并得到最终拟合曲线</p>
+    </div>
+
+    
+
+
+<div class="article-tags">
+  
+  <a class="label label-default" href="https://growing-bison.github.io/tags/r/">R</a>
+  
+  <a class="label label-default" href="https://growing-bison.github.io/tags/%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/">数据处理</a>
+  
+  <a class="label label-default" href="https://growing-bison.github.io/tags/%E7%BB%98%E5%9B%BE/">绘图</a>
+  
+  <a class="label label-default" href="https://growing-bison.github.io/tags/%E6%B0%94%E8%B1%A1%E6%95%B0%E6%8D%AE/">气象数据</a>
+  
+</div>
+
+
+
+
+    
+    
+
+    
+    <div class="article-widget">
+      <div class="post-nav">
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="https://growing-bison.github.io/post/%E5%85%B3%E4%BA%8Epython%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8C%85/" rel="next">关于python自定义包</a>
+  </div>
+  
+  
+</div>
+
+    </div>
+    
+
+    
+<section id="comments">
+  <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "Growing-bision" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+
+
+  </div>
+</article>
+
+<footer class="site-footer">
+  <div class="container">
+
+    
+
+    <p class="powered-by">
+
+      &copy; 2018 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fas fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha512-3P8rXCuGJdNZOnUx/03c1jOTnMn3rP63nBip5gOP2qmUh5YAdVAvFZ1E+QLZZbC1rtMrQb+mah3AfYW11RUrWA==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+    
+
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin="anonymous"></script>
+    
+
+    
+    
+    
+    <script id="dsq-count-scr" src="//Growing-bision.disqus.com/count.js" async></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    <script src="/js/search.js"></script>
+    
+
+    
+    
+
+  </body>
+</html>
+

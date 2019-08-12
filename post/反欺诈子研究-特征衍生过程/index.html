@@ -1,0 +1,2585 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 2.4.0">
+  <meta name="generator" content="Hugo 0.48" />
+  <meta name="author" content="Qikun Lu(卢启昆)">
+
+  
+  
+  
+  
+    
+  
+  <meta name="description" content="Table of Contents 1&nbsp;&nbsp;衍生特征分析过程1.1&nbsp;&nbsp;数据读取1.2&nbsp;&nbsp;定义处理单列的数据1.2">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://growing-bison.github.io/post/%E5%8F%8D%E6%AC%BA%E8%AF%88%E5%AD%90%E7%A0%94%E7%A9%B6-%E7%89%B9%E5%BE%81%E8%A1%8D%E7%94%9F%E8%BF%87%E7%A8%8B/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#0095eb">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous">
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-125961128-1', 'auto');
+      
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js" integrity="sha512-HUmooslVKj4m6OBu0OgzjXXr+QuFYy/k7eLI5jdeEy/F4RSgMn6XRWRGkFi5IFaFgy7uFTkegp3Z0XnJf3Jq+g==" crossorigin="anonymous"></script>
+    
+  
+  
+
+  
+  <link rel="alternate" href="https://growing-bison.github.io/index.xml" type="application/rss+xml" title="Welcome to Bison&#39;s website">
+  <link rel="feed" href="https://growing-bison.github.io/index.xml" type="application/rss+xml" title="Welcome to Bison&#39;s website">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://growing-bison.github.io/post/%E5%8F%8D%E6%AC%BA%E8%AF%88%E5%AD%90%E7%A0%94%E7%A9%B6-%E7%89%B9%E5%BE%81%E8%A1%8D%E7%94%9F%E8%BF%87%E7%A8%8B/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Welcome to Bison&#39;s website">
+  <meta property="og:url" content="https://growing-bison.github.io/post/%E5%8F%8D%E6%AC%BA%E8%AF%88%E5%AD%90%E7%A0%94%E7%A9%B6-%E7%89%B9%E5%BE%81%E8%A1%8D%E7%94%9F%E8%BF%87%E7%A8%8B/">
+  <meta property="og:title" content="反欺诈子研究-特征衍生过程 | Welcome to Bison&#39;s website">
+  <meta property="og:description" content="Table of Contents 1&nbsp;&nbsp;衍生特征分析过程1.1&nbsp;&nbsp;数据读取1.2&nbsp;&nbsp;定义处理单列的数据1.2">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-10-04T21:26:04&#43;08:00">
+  
+  <meta property="article:modified_time" content="2018-10-04T21:26:04&#43;08:00">
+  
+
+  
+
+  
+
+  <title>反欺诈子研究-特征衍生过程 | Welcome to Bison&#39;s website</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/"><img src="/img/logo_1.jpg" alt="Welcome to Bison&#39;s website"></a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications_selected">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#posts">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/files/cv.pdf">
+            
+            <span>CV</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">反欺诈子研究-特征衍生过程</h1>
+
+    
+
+<div class="article-metadata">
+
+  
+  
+  <span itemscope itemprop="author" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Qikun Lu(卢启昆)">
+  </span>
+  
+
+  <span class="article-date">
+    
+    <meta content="2018-10-04 21:26:04 &#43;0800 CST" itemprop="datePublished">
+    <time datetime="2018-10-04 21:26:04 &#43;0800 CST" itemprop="dateModified">
+      Oct 4, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Qikun Lu(卢启昆)">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    19 min read
+  </span>
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <a href="https://growing-bison.github.io/post/%E5%8F%8D%E6%AC%BA%E8%AF%88%E5%AD%90%E7%A0%94%E7%A9%B6-%E7%89%B9%E5%BE%81%E8%A1%8D%E7%94%9F%E8%BF%87%E7%A8%8B/#disqus_thread"></a>
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    
+    <a href="https://growing-bison.github.io/categories/%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6%E9%A1%B9%E7%9B%AE/">数据科学项目</a>, 
+    
+    <a href="https://growing-bison.github.io/categories/%E7%89%B9%E5%BE%81%E8%A1%8D%E7%94%9F/">特征衍生</a>, 
+    
+    <a href="https://growing-bison.github.io/categories/%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/">特征工程</a>
+    
+  </span>
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=%e5%8f%8d%e6%ac%ba%e8%af%88%e5%ad%90%e7%a0%94%e7%a9%b6-%e7%89%b9%e5%be%81%e8%a1%8d%e7%94%9f%e8%bf%87%e7%a8%8b&amp;url=https%3a%2f%2fgrowing-bison.github.io%2fpost%2f%25E5%258F%258D%25E6%25AC%25BA%25E8%25AF%2588%25E5%25AD%2590%25E7%25A0%2594%25E7%25A9%25B6-%25E7%2589%25B9%25E5%25BE%2581%25E8%25A1%258D%25E7%2594%259F%25E8%25BF%2587%25E7%25A8%258B%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fgrowing-bison.github.io%2fpost%2f%25E5%258F%258D%25E6%25AC%25BA%25E8%25AF%2588%25E5%25AD%2590%25E7%25A0%2594%25E7%25A9%25B6-%25E7%2589%25B9%25E5%25BE%2581%25E8%25A1%258D%25E7%2594%259F%25E8%25BF%2587%25E7%25A8%258B%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fgrowing-bison.github.io%2fpost%2f%25E5%258F%258D%25E6%25AC%25BA%25E8%25AF%2588%25E5%25AD%2590%25E7%25A0%2594%25E7%25A9%25B6-%25E7%2589%25B9%25E5%25BE%2581%25E8%25A1%258D%25E7%2594%259F%25E8%25BF%2587%25E7%25A8%258B%2f&amp;title=%e5%8f%8d%e6%ac%ba%e8%af%88%e5%ad%90%e7%a0%94%e7%a9%b6-%e7%89%b9%e5%be%81%e8%a1%8d%e7%94%9f%e8%bf%87%e7%a8%8b"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fgrowing-bison.github.io%2fpost%2f%25E5%258F%258D%25E6%25AC%25BA%25E8%25AF%2588%25E5%25AD%2590%25E7%25A0%2594%25E7%25A9%25B6-%25E7%2589%25B9%25E5%25BE%2581%25E8%25A1%258D%25E7%2594%259F%25E8%25BF%2587%25E7%25A8%258B%2f&amp;title=%e5%8f%8d%e6%ac%ba%e8%af%88%e5%ad%90%e7%a0%94%e7%a9%b6-%e7%89%b9%e5%be%81%e8%a1%8d%e7%94%9f%e8%bf%87%e7%a8%8b"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=%e5%8f%8d%e6%ac%ba%e8%af%88%e5%ad%90%e7%a0%94%e7%a9%b6-%e7%89%b9%e5%be%81%e8%a1%8d%e7%94%9f%e8%bf%87%e7%a8%8b&amp;body=https%3a%2f%2fgrowing-bison.github.io%2fpost%2f%25E5%258F%258D%25E6%25AC%25BA%25E8%25AF%2588%25E5%25AD%2590%25E7%25A0%2594%25E7%25A9%25B6-%25E7%2589%25B9%25E5%25BE%2581%25E8%25A1%258D%25E7%2594%259F%25E8%25BF%2587%25E7%25A8%258B%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<p><h1>Table of Contents<span class="tocSkip"></span></h1>
+<div class="toc"><ul class="toc-item"><li><span><a href="#衍生特征分析过程" data-toc-modified-id="衍生特征分析过程-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>衍生特征分析过程</a></span><ul class="toc-item"><li><span><a href="#数据读取" data-toc-modified-id="数据读取-1.1"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>数据读取</a></span></li><li><span><a href="#定义处理单列的数据" data-toc-modified-id="定义处理单列的数据-1.2"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>定义处理单列的数据</a></span><ul class="toc-item"><li><span><a href="#单列数据的观察" data-toc-modified-id="单列数据的观察-1.2.1"><span class="toc-item-num">1.2.1&nbsp;&nbsp;</span>单列数据的观察</a></span><ul class="toc-item"><li><span><a href="#家庭结构有关" data-toc-modified-id="家庭结构有关-1.2.1.1"><span class="toc-item-num">1.2.1.1&nbsp;&nbsp;</span>家庭结构有关</a></span></li><li><span><a href="#社交账号有关" data-toc-modified-id="社交账号有关-1.2.1.2"><span class="toc-item-num">1.2.1.2&nbsp;&nbsp;</span>社交账号有关</a></span></li><li><span><a href="#购物数据（京东账号jd_account、淘宝账号alipay_account）" data-toc-modified-id="购物数据（京东账号jd_account、淘宝账号alipay_account）-1.2.1.3"><span class="toc-item-num">1.2.1.3&nbsp;&nbsp;</span>购物数据（京东账号jd_account、淘宝账号alipay_account）</a></span></li><li><span><a href="#有关收入（月收入month_income、家庭支出support_pre_pay）" data-toc-modified-id="有关收入（月收入month_income、家庭支出support_pre_pay）-1.2.1.4"><span class="toc-item-num">1.2.1.4&nbsp;&nbsp;</span>有关收入（月收入month_income、家庭支出support_pre_pay）</a></span></li></ul></li><li><span><a href="#处理的基本函数" data-toc-modified-id="处理的基本函数-1.2.2"><span class="toc-item-num">1.2.2&nbsp;&nbsp;</span>处理的基本函数</a></span></li><li><span><a href="#目标变量处理（逾期数cd）" data-toc-modified-id="目标变量处理（逾期数cd）-1.2.3"><span class="toc-item-num">1.2.3&nbsp;&nbsp;</span>目标变量处理（逾期数cd）</a></span></li><li><span><a href="#组合-微信、微博、qq账户数量：社交数量shejiao_num" data-toc-modified-id="组合-微信、微博、qq账户数量：社交数量shejiao_num-1.2.4"><span class="toc-item-num">1.2.4&nbsp;&nbsp;</span>组合-微信、微博、qq账户数量：社交数量shejiao_num</a></span></li><li><span><a href="#组合-京东账号、淘宝账号：购物账号数量gouwu_num" data-toc-modified-id="组合-京东账号、淘宝账号：购物账号数量gouwu_num-1.2.5"><span class="toc-item-num">1.2.5&nbsp;&nbsp;</span>组合-京东账号、淘宝账号：购物账号数量gouwu_num</a></span></li><li><span><a href="#组合-marriage、is_child、child_sum、support_pre_count：家庭结构hunyin_cata" data-toc-modified-id="组合-marriage、is_child、child_sum、support_pre_count：家庭结构hunyin_cata-1.2.6"><span class="toc-item-num">1.2.6&nbsp;&nbsp;</span>组合-marriage、is_child、child_sum、support_pre_count：家庭结构hunyin_cata</a></span></li><li><span><a href="#单列-月收入数据：收入分级monthincome_bins" data-toc-modified-id="单列-月收入数据：收入分级monthincome_bins-1.2.7"><span class="toc-item-num">1.2.7&nbsp;&nbsp;</span>单列-月收入数据：收入分级monthincome_bins</a></span></li><li><span><a href="#组合-月收入、家庭支出：家庭支出比重zhichu_ratio" data-toc-modified-id="组合-月收入、家庭支出：家庭支出比重zhichu_ratio-1.2.8"><span class="toc-item-num">1.2.8&nbsp;&nbsp;</span>组合-月收入、家庭支出：家庭支出比重zhichu_ratio</a></span><ul class="toc-item"><li><span><a href="#zhichu_ratio生成和分布情况观察" data-toc-modified-id="zhichu_ratio生成和分布情况观察-1.2.8.1"><span class="toc-item-num">1.2.8.1&nbsp;&nbsp;</span>zhichu_ratio生成和分布情况观察</a></span></li><li><span><a href="#尝试（log变换）" data-toc-modified-id="尝试（log变换）-1.2.8.2"><span class="toc-item-num">1.2.8.2&nbsp;&nbsp;</span>尝试（log变换）</a></span></li><li><span><a href="#zhichu_ratio的衍生特征——zhichu_ratio_addcata" data-toc-modified-id="zhichu_ratio的衍生特征——zhichu_ratio_addcata-1.2.8.3"><span class="toc-item-num">1.2.8.3&nbsp;&nbsp;</span>zhichu_ratio的衍生特征——zhichu_ratio_addcata</a></span></li></ul></li></ul></li><li><span><a href="#变量重要性判别" data-toc-modified-id="变量重要性判别-1.3"><span class="toc-item-num">1.3&nbsp;&nbsp;</span>变量重要性判别</a></span><ul class="toc-item"><li><span><a href="#从统计相关的角度分析单变量的影响" data-toc-modified-id="从统计相关的角度分析单变量的影响-1.3.1"><span class="toc-item-num">1.3.1&nbsp;&nbsp;</span>从统计相关的角度分析单变量的影响</a></span><ul class="toc-item"><li><span><a href="#社交和购物数据视为连续—离散" data-toc-modified-id="社交和购物数据视为连续—离散-1.3.1.1"><span class="toc-item-num">1.3.1.1&nbsp;&nbsp;</span>社交和购物数据视为连续—离散</a></span></li><li><span><a href="#社交和购物数据视为离散—离散" data-toc-modified-id="社交和购物数据视为离散—离散-1.3.1.2"><span class="toc-item-num">1.3.1.2&nbsp;&nbsp;</span>社交和购物数据视为离散—离散</a></span></li><li><span><a href="#家庭支出比重（zhichu_ratio）的连续—离散" data-toc-modified-id="家庭支出比重（zhichu_ratio）的连续—离散-1.3.1.3"><span class="toc-item-num">1.3.1.3&nbsp;&nbsp;</span>家庭支出比重（zhichu_ratio）的连续—离散</a></span></li></ul></li><li><span><a href="#从多变量结合角度" data-toc-modified-id="从多变量结合角度-1.3.2"><span class="toc-item-num">1.3.2&nbsp;&nbsp;</span>从多变量结合角度</a></span><ul class="toc-item"><li><span><a href="#离散—离散" data-toc-modified-id="离散—离散-1.3.2.1"><span class="toc-item-num">1.3.2.1&nbsp;&nbsp;</span>离散—离散</a></span></li><li><span><a href="#采用高级统计方法识别特征效用" data-toc-modified-id="采用高级统计方法识别特征效用-1.3.2.2"><span class="toc-item-num">1.3.2.2&nbsp;&nbsp;</span>采用高级统计方法识别特征效用</a></span></li></ul></li><li><span><a href="#结论" data-toc-modified-id="结论-1.3.3"><span class="toc-item-num">1.3.3&nbsp;&nbsp;</span>结论</a></span></li></ul></li></ul></li></ul></div></p>
+
+<h2 id="衍生特征分析过程">衍生特征分析过程</h2>
+
+<pre><code class="language-python">import pandas as pd
+import numpy as np
+import datetime
+import xgboost as xgb
+import re
+import seaborn as sns
+import matplotlib.pyplot as plt
+%matplotlib notebook
+
+plt.rcParams['font.sans-serif']=['SimHei']   # show Chinese in chart
+
+
+pd.set_option('display.max_columns', 40)  # 显示隐藏列
+
+</code></pre>
+
+<h3 id="数据读取">数据读取</h3>
+
+<pre><code class="language-python">path2 = r'/home/hadoop/jack_xxx/xianxia_client_2.csv'
+dataset2 = pd.read_csv(path2, sep=',', encoding='utf-8', index_col=[0])
+</code></pre>
+
+<pre><code>C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\numpy\lib\arraysetops.py:472: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+  mask |= (ar1 == a)
+</code></pre>
+
+<pre><code class="language-python">dataset2.drop_duplicates(subset=['intopieces_id'], inplace=True)
+</code></pre>
+
+<pre><code class="language-python">dataset2.tail()
+</code></pre>
+
+<h3 id="定义处理单列的数据">定义处理单列的数据</h3>
+
+<h4 id="单列数据的观察">单列数据的观察</h4>
+
+<h5 id="家庭结构有关">家庭结构有关</h5>
+
+<h6 id="child-sum">child_sum</h6>
+
+<blockquote>
+<p>child_sum数据出现的值,
+[  0.,   2.,   1.,   3.,   4.,  nan,   5.,   8.,  62.,   6.,   7.,
+11.,  68., 100.,  22.,  15.,  12.,  25., 113.,  20.,  10.,  41.,
+33.,  14.,   9.,  21.,  24.,  23.],需预先对该列处理</p>
+</blockquote>
+
+<pre><code class="language-python">dataset2.groupby('child_sum').count()[['intopieces_id']].T
+</code></pre>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>child_sum</th>
+      <th>0.0</th>
+      <th>1.0</th>
+      <th>2.0</th>
+      <th>3.0</th>
+      <th>4.0</th>
+      <th>5.0</th>
+      <th>6.0</th>
+      <th>7.0</th>
+      <th>8.0</th>
+      <th>9.0</th>
+      <th>10.0</th>
+      <th>11.0</th>
+      <th>12.0</th>
+      <th>14.0</th>
+      <th>15.0</th>
+      <th>20.0</th>
+      <th>21.0</th>
+      <th>22.0</th>
+      <th>23.0</th>
+      <th>24.0</th>
+      <th>25.0</th>
+      <th>33.0</th>
+      <th>41.0</th>
+      <th>62.0</th>
+      <th>68.0</th>
+      <th>100.0</th>
+      <th>113.0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>intopieces_id</th>
+      <td>323802</td>
+      <td>633416</td>
+      <td>304946</td>
+      <td>40737</td>
+      <td>5433</td>
+      <td>789</td>
+      <td>143</td>
+      <td>20</td>
+      <td>13</td>
+      <td>1</td>
+      <td>6</td>
+      <td>41</td>
+      <td>5</td>
+      <td>2</td>
+      <td>1</td>
+      <td>8</td>
+      <td>2</td>
+      <td>11</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>10</td>
+      <td>1</td>
+      <td>5</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="language-python">fig1,ax1 = plt.subplots(1,1)
+ax1.get_xaxis().set_visible(False)   # Hide Ticks
+# pd.plotting.table(ax1, dataset2.groupby('child_sum').count()[['intopieces_id']], loc='upper right',colWidths=[0.2,0.2,0.2])
+pl11 = dataset2.groupby(['child_sum']).count()['intopieces_id'].plot(kind='bar', title='child_sum',table=True, ax=ax1,figsize=(10,10),fontsize=12)
+
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_13_0.png" alt="png" /></p>
+
+<p>将child_sum&gt;=5的部分视为异常数据，暂且先保留，在处理当中视为其它。</p>
+
+<h6 id="marriage">marriage</h6>
+
+<p>进件信息表中该字段的说明，婚姻状态0未婚1已婚2离异3丧偶。</p>
+
+<pre><code class="language-python">dataset2.groupby(['marriage']).count()['intopieces_id']
+</code></pre>
+
+<pre><code>marriage
+0     65785
+1    211796
+2    937405
+3    143062
+4      7971
+5      8866
+Name: intopieces_id, dtype: int64
+</code></pre>
+
+<pre><code class="language-python">
+fig2,ax2 = plt.subplots(1,1)
+ax2.get_xaxis().set_visible(False)   # Hide Ticks
+dataset2.groupby(['marriage']).count()['intopieces_id'].plot(kind='bar', title='婚姻状态',table=True, ax=ax2,figsize=(10,10),fontsize=12)
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0xa6b6518&gt;
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_17_1.png" alt="png" /></p>
+
+<p>对该字段，marriage&gt;=4的部分视为异常，暂且保留，归为其它类别。</p>
+
+<h6 id="is-child">is_child</h6>
+
+<p>进件信息表对该字段说明，有无子女/1.有2.无。</p>
+
+<pre><code class="language-python">dataset2.groupby(['is_child']).count()['intopieces_id']
+</code></pre>
+
+<pre><code>is_child
+0    1372175
+1       2071
+2        639
+Name: intopieces_id, dtype: int64
+</code></pre>
+
+<pre><code class="language-python"># fig1 = plt.figure()
+# fig1.add_subplot(111)
+fig3,ax3 = plt.subplots(1,1)
+ax3.get_xaxis().set_visible(False)   # Hide Ticks
+
+pl2 = dataset2.groupby(['is_child']).count()['intopieces_id'].plot(kind='bar', title='子女（有无）',table=True, ax=ax3, figsize=(8,8))
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_21_0.png" alt="png" /></p>
+
+<p>对该字段的观察，字段说明可能有问题，在这里理解应为0-有，1-无，2-其它。故这里的处理，将is_child&gt;1视为其它。</p>
+
+<h6 id="support-pre-count">support_pre_count</h6>
+
+<pre><code class="language-python">dataset2.groupby(['support_pre_count']).count()['intopieces_id']
+</code></pre>
+
+<pre><code>support_pre_count
+0      814769
+1      398249
+2      144316
+3       15426
+4        1766
+5         253
+6          43
+7           4
+9           1
+10          3
+11         10
+12          1
+14          2
+15          1
+16          1
+20          3
+21          1
+22          3
+25          1
+36          2
+41          1
+127        29
+Name: intopieces_id, dtype: int64
+</code></pre>
+
+<pre><code class="language-python">fig4,ax4 = plt.subplots(1,1)
+ax4.get_xaxis().set_visible(False)   # Hide Ticks
+
+dataset2.groupby(['support_pre_count']).count()['intopieces_id'].plot(kind='bar', title='供养人数',table=True, ax=ax4, figsize=(10,10),fontsize=12)
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0xa73e2e8&gt;
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_25_1.png" alt="png" /></p>
+
+<p>这里看到供养人数有出现＞6的情况。这儿采用的处理方式，对support_pre_count＞6的部分视为异常，归为其它类别。</p>
+
+<h6 id="处理方法结论">处理方法结论</h6>
+
+<p>筛选该条件(support_pre_count &lt;=6) &amp; (is_child&lt;2) &amp; (marriage&lt;4) &amp; (child_sum&lt;5)，在此基础上做家庭结构的划分；对于该条件之外的视为其它类别（归因于数据记录不规范、错误所带来的）</p>
+
+<h5 id="社交账号有关">社交账号有关</h5>
+
+<pre><code class="language-python">dataset2.columns
+</code></pre>
+
+<pre><code>Index(['intopieces_id', 'cd', 'weixin', 'weibo', 'qq', 'marriage', 'is_child',
+       'support_pre_count', 'child_sum', 'alipay_account', 'jd_account',
+       'id_num', 'house_pay', 'support_pre_pay', 'month_income'],
+      dtype='object')
+</code></pre>
+
+<h6 id="weixin">weixin</h6>
+
+<pre><code class="language-python">
+print('空值:',dataset2[dataset2['weixin'].isnull()].count()['intopieces_id'],'\n',
+      '非空:',dataset2[dataset2['weixin'].notnull()].count()['intopieces_id'],'\n',
+     '无:',dataset2[(dataset2['weixin']=='无')].count()['intopieces_id'])
+
+# [Nn][Aa][Nn]
+</code></pre>
+
+<pre><code>空值: 1181935 
+ 非空: 192950 
+ 无: 2434
+</code></pre>
+
+<pre><code class="language-python">dataset2[((dataset2['weixin']=='nan')|(dataset2['weixin']=='NULL')|(dataset2['weixin']=='空')|(dataset2['weixin']=='无'))].count()['intopieces_id']
+
+
+</code></pre>
+
+<pre><code>2434
+</code></pre>
+
+<h6 id="weibo">weibo</h6>
+
+<pre><code class="language-python">
+print('空值:',dataset2[dataset2['weibo'].isnull()].count()['intopieces_id'],'\n',
+      '非空:',dataset2[dataset2['weibo'].notnull()].count()['intopieces_id'],'\n',
+     '无:',dataset2[(dataset2['weibo']==u'无')].count()['intopieces_id'])
+
+# [Nn][Aa][Nn]
+</code></pre>
+
+<pre><code>空值: 1369308 
+ 非空: 5577 
+ 无: 3908
+</code></pre>
+
+<pre><code class="language-python">dataset2[((dataset2['weibo']=='nan')|(dataset2['weibo']=='NULL')|(dataset2['weibo']=='空')|(dataset2['weibo']=='无'))].count()['intopieces_id']
+
+</code></pre>
+
+<pre><code>3908
+</code></pre>
+
+<h6 id="qq">qq</h6>
+
+<pre><code class="language-python">
+print('空值:',dataset2[dataset2['qq'].isnull()].count()['intopieces_id'],'\n',
+      '非空:',dataset2[dataset2['qq'].notnull()].count()['intopieces_id'],'\n',
+     '无:',dataset2[(dataset2['qq']=='无')].count()['intopieces_id'])
+
+# [Nn][Aa][Nn]
+</code></pre>
+
+<pre><code>空值: 1284821 
+ 非空: 90064 
+ 无: 2611
+</code></pre>
+
+<pre><code class="language-python">dataset2[((dataset2['qq']=='nan')|(dataset2['qq']=='NULL')|(dataset2['qq']=='空')|(dataset2['qq']=='无'))].count()['intopieces_id']
+
+</code></pre>
+
+<pre><code>2611
+</code></pre>
+
+<h6 id="处理方式">处理方式</h6>
+
+<p>考虑到三个字段的缺失值比例较大，有几种处理方式：
+1、保存原有的缺失(不推荐)
+2、插补：选择多重插补法(最合适)</p>
+
+<h5 id="购物数据-京东账号jd-account-淘宝账号alipay-account">购物数据（京东账号jd_account、淘宝账号alipay_account）</h5>
+
+<h6 id="jd-account">jd_account</h6>
+
+<pre><code class="language-python">
+print('空值:',dataset2[dataset2['jd_account'].isnull()].count()['intopieces_id'],'\n',
+      '非空:',dataset2[dataset2['jd_account'].notnull()].count()['intopieces_id'],'\n',
+     '无:',dataset2[(dataset2['jd_account']=='无')].count()['intopieces_id'])
+
+
+</code></pre>
+
+<pre><code>空值: 1371477 
+ 非空: 3408 
+ 无: 1775
+</code></pre>
+
+<pre><code class="language-python">dataset2[((dataset2['jd_account']=='nan')|(dataset2['jd_account']=='NULL')|(dataset2['jd_account']=='空')|(dataset2['jd_account']=='无'))].count()['intopieces_id']
+
+</code></pre>
+
+<pre><code>1775
+</code></pre>
+
+<h6 id="alipay-account">alipay_account</h6>
+
+<pre><code class="language-python">dataset2.columns
+</code></pre>
+
+<pre><code>Index(['intopieces_id', 'cd', 'weixin', 'weibo', 'qq', 'marriage', 'is_child',
+       'support_pre_count', 'child_sum', 'alipay_account', 'jd_account',
+       'id_num', 'house_pay', 'support_pre_pay', 'month_income'],
+      dtype='object')
+</code></pre>
+
+<pre><code class="language-python">
+print('空值:',dataset2[dataset2['alipay_account'].isnull()].count()['intopieces_id'],'\n',
+      '非空:',dataset2[dataset2['alipay_account'].notnull()].count()['intopieces_id'],'\n',
+     '无:',dataset2[(dataset2['alipay_account']=='无')].count()['intopieces_id'])
+
+# [Nn][Aa][Nn]
+</code></pre>
+
+<pre><code>空值: 1363912 
+ 非空: 10973 
+ 无: 1369
+</code></pre>
+
+<pre><code class="language-python">dataset2[((dataset2['alipay_account']=='nan')|(dataset2['alipay_account']=='NULL')|(dataset2['alipay_account']=='空')|(dataset2['alipay_account']=='无'))].count()['intopieces_id']
+
+</code></pre>
+
+<pre><code>1369
+</code></pre>
+
+<h5 id="有关收入-月收入month-income-家庭支出support-pre-pay">有关收入（月收入month_income、家庭支出support_pre_pay）</h5>
+
+<h6 id="月收入month-income">月收入month_income</h6>
+
+<pre><code class="language-python">
+print('空值:',dataset2[dataset2['month_income'].isnull()].count()['intopieces_id'],'\n',
+      '非空:',dataset2[dataset2['month_income'].notnull()].count()['intopieces_id'],'\n',
+#      '无:',dataset2[(dataset2['month_income']=='无')].count()['intopieces_id']
+     )
+
+# [Nn][Aa][Nn]
+</code></pre>
+
+<pre><code>空值: 0 
+ 非空: 1374885 
+</code></pre>
+
+<pre><code class="language-python">dataset2[['month_income']].describe()
+</code></pre>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>month_income</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>1.374885e+06</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>3.247747e+04</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>1.201198e+06</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.000000e+00</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>4.500000e+03</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>8.000000e+03</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>2.000000e+04</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1.111111e+09</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="language-python">fig41 = plt.figure()
+fig41.add_subplot(111)
+dataset2[dataset2['month_income']&gt;= 5000000].groupby('cd').count()['intopieces_id'].plot(kind='bar',title='month_income')
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0xa80cc50&gt;
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_54_1.png" alt="png" /></p>
+
+<pre><code class="language-python">fig41 = plt.figure()
+fig41.add_subplot(111)
+dataset2[dataset2['month_income']&lt;10000000].groupby('cd').count()['intopieces_id'].plot(kind='bar')
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0xaef1cc0&gt;
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_55_1.png" alt="png" /></p>
+
+<pre><code class="language-python">fig41 = plt.figure()
+fig41.add_subplot(111)
+plot1 = sns.boxplot(y='month_income',x='cd',data=dataset2, )
+plot1.set(ylim=(0,100000))
+plt.title('家庭月收入分布')
+</code></pre>
+
+<pre><code>Text(0.5,1,'家庭月收入分布')
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_56_1.png" alt="png" /></p>
+
+<h6 id="家庭支出support-pre-pay">家庭支出support_pre_pay</h6>
+
+<pre><code class="language-python">
+print('空值:',dataset2[dataset2['support_pre_pay'].isnull()].count()['intopieces_id'],'\n',
+      '非空:',dataset2[dataset2['support_pre_pay'].notnull()].count()['intopieces_id'],'\n',
+#      '无:',dataset2[(dataset2['month_income']=='无')].count()['intopieces_id']
+     )
+
+# [Nn][Aa][Nn]
+</code></pre>
+
+<pre><code>空值: 0 
+ 非空: 1374885 
+</code></pre>
+
+<pre><code class="language-python">dataset2[['support_pre_pay']].describe()
+</code></pre>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>support_pre_pay</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>1.374885e+06</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>5.408445e+03</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>3.172173e+06</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.000000e+00</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.000000e+00</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>6.000000e+02</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>1.000000e+03</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>2.147484e+09</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="language-python">fig42 = plt.figure()
+fig42.add_subplot(111)
+plot1 = sns.boxplot(y='support_pre_pay',x='cd',data=dataset2)
+plot1.set(ylim=(0,10000))
+plt.title('家庭月支出分布')
+</code></pre>
+
+<pre><code>Text(0.5,1,'家庭月支出分布')
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_60_1.png" alt="png" /></p>
+
+<h4 id="处理的基本函数">处理的基本函数</h4>
+
+<pre><code class="language-python">dataset2[dataset2['child_sum'].isnull()].head()
+</code></pre>
+
+<pre><code class="language-python">def one_feature(x):
+    '''
+    该函数用于处理单变量特征：社交账号、购物账号
+    Args:
+        x: string, 账号信息
+
+    Returns:number, 打标签[0,1,10]
+
+    '''
+    x = str(x)
+    r = '\s|\.|\,|\:|\&quot;|\'|'  # '.', ',',' '
+    x = re.sub(r, &quot;&quot;, x)
+
+    if x == u'无':
+        label = 0  # 0表示没有账号
+    elif x == 'nan':
+        label = 10  # 10表示空值标示
+    else:
+        label = 1  # 1标示有账号
+    return label
+
+
+def shejiao_func(x, y, z):
+    '''
+    组合-社交账户数据的处理
+
+    Args:
+        x: string, 微信账号
+        y: string, 微博账号
+        z: string, qq账号
+
+    Returns: string, 打标签-社交账号类别[0,1,2,3,4,5,6,7,8,9]
+
+    '''
+
+    label_wx = one_feature(x)
+    label_wb = one_feature(y)
+    label_qq = one_feature(z)
+    sum_num = label_wb + label_wx + label_qq
+
+    if (sum_num &lt;= 3) and (sum_num &gt;= 0):
+        label = str(sum_num)  # 正常计数
+
+    elif sum_num == 11:
+        label = str(4)  # 计数1+未登记1
+
+    elif sum_num == 21:
+        label = str(5)  # 计数1+未登记2
+
+    elif sum_num == 12:
+        label = str(6)  # 计数2+未登记1
+
+    elif sum_num == 10:
+        label = str(7)  # 计数0+未登记1
+
+    elif sum_num == 20:
+        label = str(8)  # 计数0+未登记2
+
+    elif sum_num == 30:
+        label = str(9)  # 全未登记
+
+    else:
+        label = str(10)  # other
+
+    return label
+
+
+def gouwu_func(x, y):
+    '''
+    组合-购物账户数据的处理
+
+    Args:
+        x: string, 京东账号
+        y: string, 淘宝账号
+
+    Returns: string, 打标签-购物账号类别[0,1,2,3,4,5,6]
+
+    '''
+
+    label_jd = one_feature(x)
+    label_tb = one_feature(y)
+
+    sum_num = label_jd + label_tb
+    if (sum_num &lt;= 2) and (sum_num &gt;= 0):
+        label = str(sum_num)  # 正常计数
+
+    elif sum_num == 11:
+        label = str(3)  # 计数1+未登记1
+
+    elif sum_num == 10:
+        label = str(4)  # 计数0+未登记1
+
+    elif sum_num == 20:
+        label = str(5)  # 全未登记
+
+    else:
+        label = str(6)  # other
+
+    return label
+
+
+def muti_family_func(marriage, is_child, child_sum, support_pre_count):
+    '''
+    组合 - 家庭结构处理
+
+    Args:
+        marriage: number, 婚姻状态
+        is_child: number, 是否子女
+        child_sum: number, 孩子数量
+        support_pre_count: number, 供养人数
+
+    Returns: string, 打标签-家庭结构类别[0,1,2,3,4]
+
+    '''
+
+    if ((support_pre_count &lt;= 6) &amp; (is_child &lt; 2) &amp; (marriage &lt; 4) &amp; (child_sum &lt; 5)):
+        if ((marriage == 0) | ((marriage == 2) &amp; (is_child == 1)) | ((marriage == 3) &amp; (is_child == 1))):
+            label = str(0)  # 单身家庭
+
+        elif (((marriage == 1) &amp; (is_child == 1)) | (
+                (marriage == 1) &amp; (is_child == 0) &amp; ((support_pre_count == 0) | (support_pre_count &lt;= child_sum)))):
+            label = str(1)  # 夫妻二人
+
+        elif ((marriage == 1) &amp; (is_child == 0) &amp; (support_pre_count &gt;= child_sum)):
+            label = str(2)  # 核心家庭和主干家庭
+
+        elif ((marriage == 2) &amp; (is_child == 0) &amp; (child_sum &gt;= 1) &amp; (support_pre_count &gt;= child_sum)):
+            label = str(3)  # 单亲家庭
+        else:
+            label = str(4)  # other
+    else:
+        label = str(5)  # other,error_data
+
+    return label
+
+
+def month_income(pd_series=dataset2['month_income'],
+                 divition=[float('-inf'), 3000, 30000, 80000, 150000, 300000, 1000000, 5000000, float('inf')],
+                 labels=['0', '1', '2', '3', '4', '5', '6', '7']):
+    '''
+    单列 - 月收入处理
+
+    Args:
+        pd_series: pd.Series,里面的元素number, 欲进行分箱数据
+        divition: list,里面元素number, 用于分箱的临界值数据
+        labels:
+
+    Returns:pd.Series, 分箱之后的标签结果.['0', '1', '2', '3', '4', '5', '6', '7']分别对应
+    贫困人口,穷人,低收入,初级小康,高级小康,中高收入,高收入,三者归一类（富翁,富豪,超级富豪）
+
+    '''
+
+
+
+    bins_series = pd.cut(pd_series* 12, bins=divition, right=True, precision=1, retbins=False,
+                         labels=labels)
+
+    return bins_series
+
+
+def income_cata(outcome, income):
+    '''
+    组合-辅助1，家庭支出和月收入
+    用于对家庭支出、月收入各单列中的数据进行处理，为计算家庭支出比重income_ratio函数做准备。
+
+    Args:
+        outcome: number, 家庭支出
+        income: number,　家庭收入
+
+    Returns:string, 打标签-辅助1类别[0,1,2,3]
+
+    '''
+
+    if (outcome &lt;= 0.0) and (income &lt;= 0):
+        label = str(1)  # 表示家庭支出、月收入，全部&lt;=0的情况
+
+    elif (outcome &lt;= 0.0) and (income &gt; 0):
+        label = str(2)  # 表示家庭支出&lt;=0的情况
+
+    elif (outcome &gt; 0.0) and (income &lt;= 0):
+        label = str(3)  # 表示月收入&lt;=0的情况
+    else:
+        label = str(0)  # 表示家庭支出、月收入全部&gt;0的情况
+
+    return label
+
+
+def income_ratio(outcome, income):
+    '''
+    组合-比值，家庭支出和月收入
+
+    Args:
+        outcome: number, 家庭支出
+        income: number,　家庭收入
+
+    Returns:number, 家庭支出比重[0,inf],inf表示无穷
+
+    '''
+
+    label = income_cata(outcome, income)
+    if label == '0':
+
+        x = float(outcome)
+        y = float(income)
+        value = x / y
+    elif label == '1':
+        value = 1
+        
+    elif label == '2':
+        value = 0
+        
+    else:
+        value = 100  # 对应于income_cata返回结果3，即家庭收入&lt;=0的情况，赋给指定值100。
+
+    return value
+
+
+def income_ratio_addcata(outcome, income):
+    '''
+    组合-比值衍生类别1，家庭支出和月收入
+    衍生的类别变量，和家庭支出、月收入组合特征共同使用
+
+    Args:
+        outcome: number, 家庭支出
+        income: number,　家庭收入
+
+    Returns:string, 打标签-支出比重的类别[0,1,2,3,4,5]
+
+    '''
+
+    value = income_ratio(outcome, income)
+    if value == 0:
+        label = str(0)  # 表示家庭支出比重=0的情况
+
+    elif (value &gt; 0) &amp; (value &lt;= .01):
+        label = str(1)  # 表示家庭支出比重(0,0.01]的情况,’(]‘表示左开右闭
+
+    elif (value &gt; 0.01) &amp; (value &lt;= .1):
+        label = str(2)  # 表示家庭支出比重(0.01,0.1]的情况
+
+    elif (value &gt; 0.1) &amp; (value &lt;= 1):
+        label = str(3)  # 表示家庭支出比重(0.1,1]的情况
+
+    elif (value &gt; 1) &amp; (value &lt;= 10):
+        label = str(4)  # 表示家庭支出比重(1,10]的情况
+
+    else:
+        label = str(5)  # 表示家庭支出比重(10,inf]的情况,inf表示无穷
+
+    return label
+
+
+def cd_flag(x):
+    '''
+    目标变量的处理
+    逾期数＞0即认为逾期
+
+    Args:
+        x: number, 目标变量数值
+
+    Returns:string, 打标签-目标变量类别[0,1]
+
+    '''
+    
+    if x &gt; 0:
+        label = str(1)  # 1表示逾期
+        
+    else:
+        label = str(0)  # 0表示正常
+        
+    return label
+</code></pre>
+
+<h4 id="目标变量处理-逾期数cd">目标变量处理（逾期数cd）</h4>
+
+<pre><code class="language-python">dataset2['cd'] = dataset2['cd'].apply(cd_flag)
+</code></pre>
+
+<h4 id="组合-微信-微博-qq账户数量-社交数量shejiao-num">组合-微信、微博、qq账户数量：社交数量shejiao_num</h4>
+
+<p>对缺失的类别保留，并相应处理</p>
+
+<pre><code class="language-python">dataset2['shejiao_num'] = list(map(lambda x,y,z: shejiao_func(x,y,z), dataset2['weixin'],dataset2['weibo'],dataset2['qq']))
+
+</code></pre>
+
+<pre><code class="language-python">dataset2.groupby(['cd','shejiao_num']).agg({'intopieces_id':'count'}).unstack()
+</code></pre>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="10" halign="left">intopieces_id</th>
+    </tr>
+    <tr>
+      <th>shejiao_num</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+    </tr>
+    <tr>
+      <th>cd</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1126</td>
+      <td>691</td>
+      <td>538</td>
+      <td>1084</td>
+      <td>89</td>
+      <td>115332</td>
+      <td>29575</td>
+      <td>185</td>
+      <td>33</td>
+      <td>784481</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>734</td>
+      <td>268</td>
+      <td>128</td>
+      <td>201</td>
+      <td>37</td>
+      <td>62621</td>
+      <td>18125</td>
+      <td>131</td>
+      <td>11</td>
+      <td>359495</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="language-python"># fig1 = plt.figure()
+# fig1.add_subplot(111)
+dataset2.groupby(['cd','shejiao_num']).agg({'intopieces_id':'count'}).unstack().T.plot(kind='bar')
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x37e4c1d0&gt;
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_69_1.png" alt="png" /></p>
+
+<pre><code class="language-python">dataset2.groupby(['cd','shejiao_num']).agg({'intopieces_id':'count'}).unstack()/dataset2.groupby(['cd','shejiao_num']).agg({'intopieces_id':'count'}).unstack().sum()
+</code></pre>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="10" halign="left">intopieces_id</th>
+    </tr>
+    <tr>
+      <th>shejiao_num</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+    </tr>
+    <tr>
+      <th>cd</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.605376</td>
+      <td>0.720542</td>
+      <td>0.807808</td>
+      <td>0.84358</td>
+      <td>0.706349</td>
+      <td>0.648104</td>
+      <td>0.620021</td>
+      <td>0.585443</td>
+      <td>0.75</td>
+      <td>0.68575</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.394624</td>
+      <td>0.279458</td>
+      <td>0.192192</td>
+      <td>0.15642</td>
+      <td>0.293651</td>
+      <td>0.351896</td>
+      <td>0.379979</td>
+      <td>0.414557</td>
+      <td>0.25</td>
+      <td>0.31425</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="language-python">shejiao_perc = dataset2.groupby(['cd','shejiao_num']).agg({'intopieces_id':'count'}).unstack()/dataset2.groupby(['cd','shejiao_num']).agg({'intopieces_id':'count'}).unstack().sum()
+shejiao_perc.T.plot(kind='bar',stacked=True)
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x26f18dd8&gt;
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_71_1.png" alt="png" /></p>
+
+<p>从上面观察考虑，认为同时拥有3个账号的客户，其所逾期的可能性会更低。同时怀疑，是否存在某一个账号是影响的关键？</p>
+
+<h4 id="组合-京东账号-淘宝账号-购物账号数量gouwu-num">组合-京东账号、淘宝账号：购物账号数量gouwu_num</h4>
+
+<pre><code class="language-python">dataset2['gouwu_num'] = list(map(lambda x,y: gouwu_func(x,y), dataset2['alipay_account'],dataset2['jd_account']))
+
+</code></pre>
+
+<pre><code class="language-python">dataset2.groupby(['cd','gouwu_num']).agg({'intopieces_id':'count'}).unstack().T.plot(kind='bar')
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x3bd39c50&gt;
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_75_1.png" alt="png" /></p>
+
+<pre><code class="language-python">dataset2.groupby(['cd','gouwu_num']).agg({'intopieces_id':'count'}).unstack()
+</code></pre>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="6" halign="left">intopieces_id</th>
+    </tr>
+    <tr>
+      <th>gouwu_num</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+    </tr>
+    <tr>
+      <th>cd</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1052</td>
+      <td>354</td>
+      <td>1331</td>
+      <td>5774</td>
+      <td>8</td>
+      <td>924615</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>308</td>
+      <td>60</td>
+      <td>181</td>
+      <td>2023</td>
+      <td>4</td>
+      <td>439175</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="language-python">dataset2.groupby(['cd','gouwu_num']).agg({'intopieces_id':'count'}).unstack()/dataset2.groupby(['cd','gouwu_num']).agg({'intopieces_id':'count'}).unstack().sum()
+</code></pre>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="6" halign="left">intopieces_id</th>
+    </tr>
+    <tr>
+      <th>gouwu_num</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+    </tr>
+    <tr>
+      <th>cd</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.773529</td>
+      <td>0.855072</td>
+      <td>0.880291</td>
+      <td>0.740541</td>
+      <td>0.666667</td>
+      <td>0.677975</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.226471</td>
+      <td>0.144928</td>
+      <td>0.119709</td>
+      <td>0.259459</td>
+      <td>0.333333</td>
+      <td>0.322025</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="language-python">gouwu_perc = dataset2.groupby(['cd','gouwu_num']).agg({'intopieces_id':'count'}).unstack()/dataset2.groupby(['cd','gouwu_num']).agg({'intopieces_id':'count'}).unstack().sum()
+gouwu_perc.T.plot(kind='bar',stacked=True)
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x2ea68320&gt;
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_78_1.png" alt="png" /></p>
+
+<h4 id="组合-marriage-is-child-child-sum-support-pre-count-家庭结构hunyin-cata">组合-marriage、is_child、child_sum、support_pre_count：家庭结构hunyin_cata</h4>
+
+<pre><code class="language-python">dataset2['child_sum'].unique()
+</code></pre>
+
+<pre><code>array([  0.,   2.,   1.,   3.,   4.,  nan,   5.,   8.,  62.,   6.,   7.,
+        11.,  68., 100.,  22.,  15.,  12.,  25., 113.,  20.,  10.,  41.,
+        33.,  14.,   9.,  21.,  24.,  23.])
+</code></pre>
+
+<pre><code class="language-python">dataset2['hunyin_cata'] = list(map(lambda x,y,z,w: muti_family_func(x,y,z,w), dataset2['marriage'],dataset2['is_child'],dataset2['child_sum'],dataset2['support_pre_count']))
+# marriage, is_child, child_sum, support_pre_count
+</code></pre>
+
+<pre><code class="language-python">dataset2.groupby(['hunyin_cata']).count()['intopieces_id']
+</code></pre>
+
+<pre><code>hunyin_cata
+0      2452
+1    209424
+2      1909
+3    451980
+4    625078
+5     84042
+Name: intopieces_id, dtype: int64
+</code></pre>
+
+<pre><code class="language-python">dataset2.groupby(['cd','hunyin_cata']).agg({'intopieces_id':'count'}).unstack().T.plot(kind='bar')
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x43d76b38&gt;
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_83_1.png" alt="png" /></p>
+
+<pre><code class="language-python">dataset2.groupby(['cd','hunyin_cata']).agg({'intopieces_id':'count'}).unstack()/dataset2.groupby(['cd','hunyin_cata']).agg({'intopieces_id':'count'}).unstack().sum()
+</code></pre>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="6" halign="left">intopieces_id</th>
+    </tr>
+    <tr>
+      <th>hunyin_cata</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+    </tr>
+    <tr>
+      <th>cd</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.790783</td>
+      <td>0.67412</td>
+      <td>0.641173</td>
+      <td>0.610206</td>
+      <td>0.744593</td>
+      <td>0.565955</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.209217</td>
+      <td>0.32588</td>
+      <td>0.358827</td>
+      <td>0.389794</td>
+      <td>0.255407</td>
+      <td>0.434045</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="language-python">hunyin_perc = dataset2.groupby(['cd','hunyin_cata']).agg({'intopieces_id':'count'}).unstack()/dataset2.groupby(['cd','hunyin_cata']).agg({'intopieces_id':'count'}).unstack().sum()
+hunyin_perc.T.plot(kind='bar',stacked=True)
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x2ead0eb8&gt;
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_85_1.png" alt="png" /></p>
+
+<h4 id="单列-月收入数据-收入分级monthincome-bins">单列-月收入数据：收入分级monthincome_bins</h4>
+
+<pre><code class="language-python">dataset2['monthincome_bins'] = month_income(dataset2['month_income'])
+</code></pre>
+
+<pre><code class="language-python">dataset2.groupby(['monthincome_bins']).count()['intopieces_id']
+</code></pre>
+
+<pre><code>monthincome_bins
+0     93175
+1     26904
+2    475463
+3    291892
+4    191145
+5    209742
+6     74058
+7     12506
+Name: intopieces_id, dtype: int64
+</code></pre>
+
+<pre><code class="language-python">dataset2.groupby(['cd','monthincome_bins']).agg({'intopieces_id':'count'}).unstack()
+</code></pre>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="8" halign="left">intopieces_id</th>
+    </tr>
+    <tr>
+      <th>monthincome_bins</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+    </tr>
+    <tr>
+      <th>cd</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>50840</td>
+      <td>18555</td>
+      <td>322996</td>
+      <td>204990</td>
+      <td>134515</td>
+      <td>147132</td>
+      <td>46699</td>
+      <td>7407</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>42335</td>
+      <td>8349</td>
+      <td>152467</td>
+      <td>86902</td>
+      <td>56630</td>
+      <td>62610</td>
+      <td>27359</td>
+      <td>5099</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="language-python"># fig7 = plt.figure()
+# fig7.add_subplot(111)
+dataset2.groupby(['cd','monthincome_bins']).agg({'intopieces_id':'count'}).unstack().T.plot(kind='bar')
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x2eb27470&gt;
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_90_1.png" alt="png" /></p>
+
+<pre><code class="language-python">dataset2.groupby(['cd','monthincome_bins']).agg({'intopieces_id':'count'}).unstack()/dataset2.groupby(['cd','monthincome_bins']).agg({'intopieces_id':'count'}).unstack().sum()
+</code></pre>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="8" halign="left">intopieces_id</th>
+    </tr>
+    <tr>
+      <th>monthincome_bins</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+    </tr>
+    <tr>
+      <th>cd</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.54564</td>
+      <td>0.689674</td>
+      <td>0.679329</td>
+      <td>0.70228</td>
+      <td>0.703733</td>
+      <td>0.70149</td>
+      <td>0.630573</td>
+      <td>0.592276</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.45436</td>
+      <td>0.310326</td>
+      <td>0.320671</td>
+      <td>0.29772</td>
+      <td>0.296267</td>
+      <td>0.29851</td>
+      <td>0.369427</td>
+      <td>0.407724</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="language-python">
+monthincome_perc = dataset2.groupby(['cd','monthincome_bins']).agg({'intopieces_id':'count'}).unstack()/dataset2.groupby(['cd','monthincome_bins']).agg({'intopieces_id':'count'}).unstack().sum()
+monthincome_perc.T.plot(kind='bar',stacked=True)
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x2ecdb748&gt;
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_92_1.png" alt="png" /></p>
+
+<h4 id="组合-月收入-家庭支出-家庭支出比重zhichu-ratio">组合-月收入、家庭支出：家庭支出比重zhichu_ratio</h4>
+
+<h5 id="zhichu-ratio生成和分布情况观察">zhichu_ratio生成和分布情况观察</h5>
+
+<pre><code class="language-python">dataset2[dataset2['support_pre_pay']&gt;dataset2['month_income']].head()
+</code></pre>
+
+<pre><code class="language-python">dataset2['zhichu_ratio'] = list(map(lambda x,y: income_ratio(x,y), dataset2['support_pre_pay'],dataset2['month_income']))
+
+</code></pre>
+
+<h6 id="值分布图">值分布图</h6>
+
+<pre><code class="language-python">fig81 = plt.figure(figsize=(16,10))
+fig81.suptitle('家庭月支出比重（值分布）')
+plt.tight_layout(pad=2) #设置默认的间距
+plt.subplots_adjust(wspace=0.5, hspace=0.5)
+
+fig81.add_subplot(241)
+plot1 = sns.boxplot(y='zhichu_ratio',x='cd',data=dataset2)
+plot1.set(ylim=(0,1))
+plt.title('ALL')
+
+
+fig81.add_subplot(242)
+plot1 = sns.boxplot(y='zhichu_ratio',x='cd',data=dataset2[(dataset2['zhichu_ratio']== 0)])
+plt.title('= 0')
+                                    
+fig81.add_subplot(243)
+plot1 = sns.boxplot(y='zhichu_ratio',x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt; 0) &amp; ((dataset2['zhichu_ratio']&lt;=.01))])
+plot1.set(ylim=(0,.01))
+plt.title('0-0.01')
+
+fig81.add_subplot(244)
+plot1 = sns.boxplot(y='zhichu_ratio',x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;.01) &amp; (dataset2['zhichu_ratio']&lt;=0.1)])
+plot1.set(ylim=(0.01,0.1))
+plt.title('0.01-0.1')                                           
+                                           
+fig81.add_subplot(245)
+plot1 = sns.boxplot(y='zhichu_ratio',x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;0.1) &amp; (dataset2['zhichu_ratio']&lt;=1)])
+plot1.set(ylim=(0,1))
+plt.title('0.1-1') 
+
+fig81.add_subplot(246)
+plot1 = sns.boxplot(y='zhichu_ratio',x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;1) &amp; (dataset2['zhichu_ratio']&lt;=10)])
+plot1.set(ylim=(0,10))
+plt.title('1-10')
+
+fig81.add_subplot(247)
+plot1 = sns.boxplot(y='zhichu_ratio',x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;10) &amp; (dataset2['zhichu_ratio']&lt;100)])
+plot1.set(ylim=(10,100))
+plt.title('10-100')
+
+fig81.add_subplot(248)
+plot1 = sns.boxplot(y='zhichu_ratio',x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;100)])
+plot1.set(ylim=(100,5000))
+plt.title('&gt;100')
+</code></pre>
+
+<pre><code>Text(0.5,1,'&gt;100')
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_98_1.png" alt="png" /></p>
+
+<h6 id="频数统计">频数统计</h6>
+
+<pre><code class="language-python">fig82 = plt.figure(figsize=(16,10))
+fig82.suptitle('家庭月支出比重（频数）')
+plt.tight_layout(pad=2) #设置默认的间距
+plt.subplots_adjust(wspace=0.5, hspace=0.5)
+
+fig82.add_subplot(241)
+plot1 = sns.countplot(x='cd',data=dataset2)
+plt.title('ALL')
+
+
+fig82.add_subplot(242)
+plot1 = sns.countplot(x='cd',data=dataset2[(dataset2['zhichu_ratio']== 0)])
+plt.title('= 0')
+                                    
+fig82.add_subplot(243)
+plot1 = sns.countplot(x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt; 0) &amp; ((dataset2['zhichu_ratio']&lt;=.01))])
+plt.title('0-0.01')
+
+fig82.add_subplot(244)
+plot1 = sns.countplot(x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;.01) &amp; (dataset2['zhichu_ratio']&lt;=0.1)])
+# plot1.set(ylim=(0,1))
+plt.title('0.01-0.1')                                           
+                                           
+fig82.add_subplot(245)
+plot1 = sns.countplot(x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;0.1) &amp; (dataset2['zhichu_ratio']&lt;=1)])
+# plot1.set(ylim=(0,1))
+plt.title('0.1-1') 
+
+fig82.add_subplot(246)
+plot1 = sns.countplot(x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;1) &amp; (dataset2['zhichu_ratio']&lt;=10)])
+# plot1.set(ylim=(0,1))
+plt.title('1-10')
+
+fig82.add_subplot(247)
+plot1 = sns.countplot(x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;10) &amp; (dataset2['zhichu_ratio']&lt;100)])
+# plot1.set(ylim=(10,100))
+plt.title('10-100')
+
+fig82.add_subplot(248)
+plot1 = sns.countplot(x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;100)])
+# plot1.set(ylim=(100,5000))
+plt.title('&gt;100')
+</code></pre>
+
+<pre><code>Text(0.5,1,'&gt;100')
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_100_1.png" alt="png" /></p>
+
+<h6 id="结论与建议">结论与建议</h6>
+
+<p>结合原始数据（月收入month_income、家庭支出support_pre_pay），其数值存在超过10万以上的，一部分可能原因是线下录入有误，一部分原因可能是客户造假，其余部分可能是存在极个别客户填写数值是真实的。基于此考虑，在对两列处理之后，相应会存在比值大于100、以及=0情况，从箱线图结果观察到＞100的部分，正常与逾期的分布无明显区别。因此，针对收入比重大于100的部分，可以考虑去除。</p>
+
+<h5 id="尝试-log变换">尝试（log变换）</h5>
+
+<pre><code class="language-python">dataset2['temp_log'] = dataset2['zhichu_ratio'].apply('log')
+</code></pre>
+
+<pre><code>C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\pandas\core\base.py:307: RuntimeWarning: divide by zero encountered in log
+  return f(self, *args, **kwargs)
+</code></pre>
+
+<h6 id="值分布">值分布</h6>
+
+<pre><code class="language-python">fig84 = plt.figure(figsize=(16,8))
+fig84.suptitle('家庭月支出log变换')
+
+plt.tight_layout(pad=2) #设置默认的间距
+plt.subplots_adjust(wspace=0.5, hspace=0.5)
+
+fig84.add_subplot(241)
+plot1 = sns.boxplot(y='temp_log',x='cd',data=dataset2)
+# plot1.set(ylim=(0,1))
+plt.title('ALL')
+
+
+fig84.add_subplot(242)
+plot1 = sns.boxplot(y='temp_log',x='cd',data=dataset2[(dataset2['zhichu_ratio']== 0)])
+plt.title('= 0')
+                                    
+fig84.add_subplot(243)
+plot1 = sns.boxplot(y='temp_log',x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt; 0) &amp; ((dataset2['zhichu_ratio']&lt;=.01))])
+# plot1.set(ylim=(0,.01))
+plt.title('0-0.01')
+
+fig84.add_subplot(244)
+plot1 = sns.boxplot(y='temp_log',x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;.01) &amp; (dataset2['zhichu_ratio']&lt;=0.1)])
+# plot1.set(ylim=(0.01,0.1))
+plt.title('0.01-0.1')                                           
+                                           
+fig84.add_subplot(245)
+plot1 = sns.boxplot(y='temp_log',x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;0.1) &amp; (dataset2['zhichu_ratio']&lt;=1)])
+# plot1.set(ylim=(0,1))
+plt.title('0.1-1') 
+
+fig84.add_subplot(246)
+plot1 = sns.boxplot(y='temp_log',x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;1) &amp; (dataset2['zhichu_ratio']&lt;=10)])
+# plot1.set(ylim=(0,10))
+plt.title('1-10')
+
+fig84.add_subplot(247)
+plot1 = sns.boxplot(y='temp_log',x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;10) &amp; (dataset2['zhichu_ratio']&lt;100)])
+# plot1.set(ylim=(10,100))
+plt.title('10-100')
+
+fig84.add_subplot(248)
+plot1 = sns.boxplot(y='temp_log',x='cd',data=dataset2[(dataset2['zhichu_ratio']&gt;100)])
+# plot1.set(ylim=(100,5000))
+plt.title('&gt;100')
+</code></pre>
+
+<pre><code>C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\matplotlib\cbook\__init__.py:1847: RuntimeWarning: invalid value encountered in double_scalars
+  stats['iqr'] = q3 - q1
+C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\matplotlib\cbook\__init__.py:1872: RuntimeWarning: invalid value encountered in less_equal
+  wiskhi = np.compress(x &lt;= hival, x)
+C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\matplotlib\cbook\__init__.py:1879: RuntimeWarning: invalid value encountered in greater_equal
+  wisklo = np.compress(x &gt;= loval, x)
+C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\numpy\lib\function_base.py:4406: RuntimeWarning: invalid value encountered in multiply
+  x2 = take(ap, indices_above, axis=axis) * weights_above
+
+
+
+
+
+Text(0.5,1,'&gt;100')
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_106_2.png" alt="png" /></p>
+
+<h6 id="结论与建议-不推荐">结论与建议——（不推荐）</h6>
+
+<p>由上面的图表观察，log变换带来数据的区分度并不理想。因此，暂且不考虑log变换。</p>
+
+<h5 id="zhichu-ratio的衍生特征-zhichu-ratio-addcata">zhichu_ratio的衍生特征——zhichu_ratio_addcata</h5>
+
+<pre><code class="language-python">dataset2['zhichu_ratio_addcata'] = list(map(lambda x,y: income_ratio_addcata(x, y), dataset2['support_pre_pay'],dataset2['month_income']))
+
+</code></pre>
+
+<pre><code class="language-python">fig85 = plt.figure(figsize=(8,8))
+
+plt.tight_layout(pad=2) #设置默认的间距
+plt.subplots_adjust(wspace=0.5, hspace=0.5)
+
+fig85.add_subplot(121)
+plot1 = sns.countplot(x='zhichu_ratio_addcata',hue='cd',data=dataset2, dodge=False)
+# plot1.set(ylim=(0,1))
+plt.title('ALL')
+
+
+</code></pre>
+
+<pre><code>Text(0.5,1,'ALL')
+</code></pre>
+
+<p><img src="/img/反欺诈特征衍生1/output_111_1.png" alt="png" /></p>
+
+<h3 id="变量重要性判别">变量重要性判别</h3>
+
+<h4 id="从统计相关的角度分析单变量的影响">从统计相关的角度分析单变量的影响</h4>
+
+<p>数据集中的社交数据和购物数据可认为是数值型，即连续-离散的变量分析</p>
+
+<h5 id="社交和购物数据视为连续-离散">社交和购物数据视为连续—离散</h5>
+
+<pre><code class="language-python"># dataset2.info()
+</code></pre>
+
+<pre><code class="language-python">
+# from sklearn.feature_selection import SelectKBest
+# from sklearn.feature_selection import  f_classif  # 即假设检验-anova方法
+# k_best = SelectKBest(f_classif, k='all')
+# Kbest = k_best.fit(dataset2[['gouwu_num','shejiao_num']], dataset2[['cd']])
+# Kbest.pvalues_
+</code></pre>
+
+<p>从上面的结果，p&lt;0.05，故认为两个变量对结果均有影响</p>
+
+<h5 id="社交和购物数据视为离散-离散">社交和购物数据视为离散—离散</h5>
+
+<pre><code class="language-python">
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
+
+dataset2_sub = dataset2[['gouwu_num','shejiao_num','cd']]
+dataset2_sub['gouwu_num'] = dataset2_sub['gouwu_num'].astype(str)
+dataset2_sub['shejiao_num'] = dataset2_sub['shejiao_num'].astype(str)
+
+
+#选择K个最好的特征，返回选择特征后的数据
+model1 = SelectKBest(chi2, k='all')
+model1.fit_transform(dataset2_sub[['gouwu_num','shejiao_num']], dataset2_sub['cd'])[1]
+
+# 各特征的得分
+model1.scores_, dataset2_sub[['gouwu_num','shejiao_num']].columns
+</code></pre>
+
+<pre><code>C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\ipykernel_launcher.py:6: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+
+C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\ipykernel_launcher.py:7: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+  import sys
+
+
+
+
+
+(array([  5.31019853, 341.66495808]),
+ Index(['gouwu_num', 'shejiao_num'], dtype='object'))
+</code></pre>
+
+<pre><code class="language-python"># 各特征的p值
+model1.pvalues_  , dataset2_sub[['gouwu_num','shejiao_num']].columns
+</code></pre>
+
+<pre><code>(array([2.12009402e-02, 2.76869376e-76]),
+ Index(['gouwu_num', 'shejiao_num'], dtype='object'))
+</code></pre>
+
+<p>从上面的结果，p&lt;0.05，故认为两个变量对目标变量均有影响</p>
+
+<h5 id="家庭支出比重-zhichu-ratio-的连续-离散">家庭支出比重（zhichu_ratio）的连续—离散</h5>
+
+<h6 id="家庭支出比重-all">家庭支出比重（ALL）</h6>
+
+<pre><code class="language-python">
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import  f_classif  # 即假设检验-anova方法
+k_best = SelectKBest(f_classif, k='all')
+Kbest = k_best.fit(dataset2[['month_income','support_pre_pay', 'zhichu_ratio']], dataset2[['cd']])
+Kbest.pvalues_
+</code></pre>
+
+<pre><code>C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\sklearn\utils\validation.py:578: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+
+
+
+
+
+array([4.99626685e-06, 9.29123318e-01, 2.43230145e-01])
+</code></pre>
+
+<p>从假设检验的分析结果中观察到，对于原始单列数据month_income，它对目标变量有一定影响；原始单列数据support_pre_pay、组合数据对目标变量无显著影响</p>
+
+<h6 id="家庭支出比重-0-ratio-10">家庭支出比重（(0&lt;ratio≤10）</h6>
+
+<pre><code class="language-python">
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import  f_classif  # 即假设检验-anova方法
+k_best = SelectKBest(f_classif, k='all')
+
+dataset2_sub3 = dataset2[(dataset2['zhichu_ratio']&gt;0)&amp;(dataset2['zhichu_ratio']&lt;10)]
+Kbest = k_best.fit(dataset2_sub3[['month_income','support_pre_pay', 'zhichu_ratio']], dataset2_sub3[['cd']])
+Kbest.pvalues_
+</code></pre>
+
+<pre><code>C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\sklearn\utils\validation.py:578: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+
+
+
+
+
+array([4.55373808e-06, 3.58681469e-01, 6.01862819e-03])
+</code></pre>
+
+<h6 id="家庭支出比重-0-ratio-10-1">家庭支出比重（(0≤ratio≤10）</h6>
+
+<pre><code class="language-python">
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import  f_classif  # 即假设检验-anova方法
+k_best = SelectKBest(f_classif, k='all')
+
+dataset2_sub3 = dataset2[(dataset2['zhichu_ratio']&gt;=0)&amp;(dataset2['zhichu_ratio']&lt;10)]
+Kbest = k_best.fit(dataset2_sub3[['month_income','support_pre_pay', 'zhichu_ratio']], dataset2_sub3[['cd']])
+Kbest.pvalues_
+</code></pre>
+
+<pre><code>C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\sklearn\utils\validation.py:578: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+
+
+
+
+
+array([2.17489841e-06, 0.00000000e+00, 0.00000000e+00])
+</code></pre>
+
+<h6 id="结论">结论</h6>
+
+<p>分三种情况区别看待家庭支出比重，0，（0,10]，（10，inf）。在对整体范围数据进行检验时，zhichu_ratio不显著，即难以判别对目标变量的影响；当在＜10的情况下，zhichu_ratio显著，明显对目标变量有影响，尤其在=0的情况当中。
+故建议添加一列特征作为辅助区分三种情况。</p>
+
+<h4 id="从多变量结合角度">从多变量结合角度</h4>
+
+<h5 id="离散-离散">离散—离散</h5>
+
+<p>[&lsquo;shejiao_num&rsquo;,&lsquo;gouwu_num&rsquo;,&lsquo;hunyin_cata&rsquo;,&lsquo;monthincome_bins&rsquo;,&lsquo;zhichu_ratio_addcata&rsquo;]
+社交、购物、家庭结构、收入分级、家庭比重（衍生类别）等离散变量判断。</p>
+
+<pre><code class="language-python">
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
+
+dataset2_sub = dataset2[['gouwu_num','shejiao_num','hunyin_cata','monthincome_bins','zhichu_ratio_addcata', 'cd']]
+dataset2_sub['gouwu_num'] = dataset2_sub['gouwu_num'].astype(str)
+dataset2_sub['shejiao_num'] = dataset2_sub['shejiao_num'].astype(str)
+
+
+#选择K个最好的特征，返回选择特征后的数据
+model1 = SelectKBest(chi2, k='all')
+model1.fit_transform(dataset2_sub[['gouwu_num','shejiao_num','hunyin_cata','monthincome_bins','zhichu_ratio_addcata']], dataset2_sub['cd'])[1]
+
+# 各特征的得分
+model1.scores_, dataset2_sub[['gouwu_num','shejiao_num','hunyin_cata','monthincome_bins','zhichu_ratio_addcata']].columns
+</code></pre>
+
+<pre><code>C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\ipykernel_launcher.py:6: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+
+C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\ipykernel_launcher.py:7: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+  import sys
+
+
+
+
+
+(array([5.31019853e+00, 3.41664958e+02, 5.59435501e+02, 1.38677840e+03,
+        6.14311476e+04]),
+ Index(['gouwu_num', 'shejiao_num', 'hunyin_cata', 'monthincome_bins',
+        'zhichu_ratio_addcata'],
+       dtype='object'))
+</code></pre>
+
+<pre><code class="language-python"># 各特征的p值
+model1.pvalues_  , dataset2_sub[['gouwu_num','shejiao_num','hunyin_cata','monthincome_bins','zhichu_ratio_addcata']].columns
+</code></pre>
+
+<pre><code>(array([2.12009402e-002, 2.76869376e-076, 1.11536417e-123, 1.56862997e-303,
+        0.00000000e+000]),
+ Index(['gouwu_num', 'shejiao_num', 'hunyin_cata', 'monthincome_bins',
+        'zhichu_ratio_addcata'],
+       dtype='object'))
+</code></pre>
+
+<h5 id="采用高级统计方法识别特征效用">采用高级统计方法识别特征效用</h5>
+
+<pre><code class="language-python">from sklearn.linear_model import RandomizedLogisticRegression
+
+r_logistic = RandomizedLogisticRegression(C=1,
+                                         scaling=0.5,
+                                         sample_fraction=0.75,
+                                         n_resampling=100,
+#                                          selection_thershold=0.1,
+                                         fit_intercept=True,
+                                         verbose=True,
+#                                          normolize=True,
+                                         random_state=1234,
+                                         n_jobs=1)
+</code></pre>
+
+<pre><code>C:\Users\M4500\Anaconda3\envs\py35_xgboost\lib\site-packages\sklearn\utils\deprecation.py:58: DeprecationWarning: Class RandomizedLogisticRegression is deprecated; The class RandomizedLogisticRegression is deprecated in 0.19 and will be removed in 0.21.
+  warnings.warn(msg, category=DeprecationWarning)
+</code></pre>
+
+<pre><code class="language-python">r_logistic.fit(dataset2_sub[['gouwu_num','shejiao_num','hunyin_cata','monthincome_bins','zhichu_ratio_addcata']], dataset2_sub['cd'])
+</code></pre>
+
+<pre><code>[Parallel(n_jobs=1)]: Done 100 out of 100 | elapsed:  5.0min finished
+
+
+
+
+
+RandomizedLogisticRegression(C=1, fit_intercept=True, memory=None, n_jobs=1,
+               n_resampling=100, normalize=True, pre_dispatch='3*n_jobs',
+               random_state=1234, sample_fraction=0.75, scaling=0.5,
+               selection_threshold=0.25, tol=0.001, verbose=True)
+</code></pre>
+
+<pre><code class="language-python">r_logistic.get_support()
+</code></pre>
+
+<pre><code>array([ True,  True,  True,  True,  True])
+</code></pre>
+
+<pre><code class="language-python">r_logistic.all_scores_
+</code></pre>
+
+<pre><code>array([[1.  ],
+       [0.9 ],
+       [0.67],
+       [1.  ],
+       [1.  ]])
+</code></pre>
+
+<p>从结果观察可知，对于5个离散特征：[&lsquo;gouwu_num&rsquo;,&lsquo;shejiao_num&rsquo;,&lsquo;hunyin_cata&rsquo;,&lsquo;monthincome_bins&rsquo;,&lsquo;zhichu_ratio_addcata&rsquo;]除了&rsquo;hunyin_cata&rsquo;重要性较低之外，其他变量都重要性得分很高。对于连续特征&rsquo;zhichu_ratio&rsquo;,在单因素分析评估中影响显著。<br />
+故可考虑将6个衍生特征视为重要特征使用。</p>
+
+<h4 id="结论-1">结论</h4>
+
+<p>综合以上的判别和评估，认为社交数量、购物账号数量、收入分级、家庭支出比重及其类型的重要性最为主要，其次是家庭结构。因此，认为所有的衍生特征均可考虑添加到模型当中进一步测试和评估它们的贡献程度。</p>
+
+    </div>
+
+    
+
+
+<div class="article-tags">
+  
+  <a class="label label-default" href="https://growing-bison.github.io/tags/python/">python</a>
+  
+  <a class="label label-default" href="https://growing-bison.github.io/tags/%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/">特征工程</a>
+  
+</div>
+
+
+
+
+    
+    
+    <div class="article-widget">
+      <div class="hr-light"></div>
+      <h3>Related</h3>
+      <ul>
+        
+        <li><a href="/post/%E5%85%B3%E4%BA%8E%E9%93%BE%E5%AE%B6%E5%85%A8%E7%BD%91%E6%88%BF%E4%BB%B7%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E6%8C%96%E6%8E%98%E9%A1%B9%E7%9B%AE/">关于链家全网房价数据分析挖掘项目</a></li>
+        
+        <li><a href="/post/%E5%86%B3%E7%AD%96%E6%A0%91%E5%8F%AF%E8%A7%86%E5%8C%96/">决策树结果可视化01</a></li>
+        
+        <li><a href="/post/%E5%85%B3%E4%BA%8Epython%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8C%85/">关于python自定义包</a></li>
+        
+      </ul>
+    </div>
+    
+
+    
+    <div class="article-widget">
+      <div class="post-nav">
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="https://growing-bison.github.io/post/%E5%85%B3%E4%BA%8E%E9%93%BE%E5%AE%B6%E5%85%A8%E7%BD%91%E6%88%BF%E4%BB%B7%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E6%8C%96%E6%8E%98%E9%A1%B9%E7%9B%AE/" rel="prev">关于链家全网房价数据分析挖掘项目</a>
+  </div>
+  
+</div>
+
+    </div>
+    
+
+    
+<section id="comments">
+  <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "Growing-bision" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+
+
+  </div>
+</article>
+
+<footer class="site-footer">
+  <div class="container">
+
+    
+
+    <p class="powered-by">
+
+      &copy; 2018 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fas fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha512-3P8rXCuGJdNZOnUx/03c1jOTnMn3rP63nBip5gOP2qmUh5YAdVAvFZ1E+QLZZbC1rtMrQb+mah3AfYW11RUrWA==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+    
+
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin="anonymous"></script>
+    
+
+    
+    
+    
+    <script id="dsq-count-scr" src="//Growing-bision.disqus.com/count.js" async></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    <script src="/js/search.js"></script>
+    
+
+    
+    
+
+  </body>
+</html>
+

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>编程 on Welcome to Bison&#39;s website</title>
+    <link>https://growing-bison.github.io/categories/%E7%BC%96%E7%A8%8B/</link>
+    <description>Recent content in 编程 on Welcome to Bison&#39;s website</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018</copyright>
+    <lastBuildDate>Fri, 09 Feb 2018 16:16:59 +0800</lastBuildDate>
+    
+	<atom:link href="https://growing-bison.github.io/categories/%E7%BC%96%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>关于python自定义包</title>
+      <link>https://growing-bison.github.io/post/%E5%85%B3%E4%BA%8Epython%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8C%85/</link>
+      <pubDate>Fri, 09 Feb 2018 16:16:59 +0800</pubDate>
+      
+      <guid>https://growing-bison.github.io/post/%E5%85%B3%E4%BA%8Epython%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8C%85/</guid>
+      <description>&lt;p&gt;这是关于如何建立python的自定义包的简单笔记，供简单参考。
+&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
